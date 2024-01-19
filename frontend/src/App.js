@@ -135,7 +135,7 @@ function App() {
 
   return (
     <div>
-      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid #000' }}></canvas>
+      <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} style={{ border: '1px solid #000' }}></canvas>
     </div>
   );
 }
