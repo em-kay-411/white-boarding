@@ -15,7 +15,7 @@ const io = socketIO(server, {
 io.on('connection', (socket) => {
     console.log(`User connected`);
 
-    socket.on('draw', (data) => {
+    socket.on('draw', () => {
         socket.broadcast.emit('draw', data);
     })
 
