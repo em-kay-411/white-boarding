@@ -126,6 +126,7 @@ function onMouseMove(event) {
         })
         // draw a line
         drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
+        socket.emit('draw', ({prevCursorX, prevCursorY, cursorX, cursorY}));
     }
     
     prevCursorX = cursorX;
@@ -265,6 +266,12 @@ function onTouchEnd(event) {
     doubleTouch = false;
 }
 
-socket.on('draw', () => {
-    console.log('drawing');
+socket.on('draw', (data) => {
+    drawings.push({
+        x0: data.prevCursorX,
+        y0: data.prevCursorY,
+        x1: data.cursorX,
+        y1: data.cursorY
+    })
+    drawLine(data.prevCursorX, data.prevCursorY, data.cursorX, data.cursorY);
 })
