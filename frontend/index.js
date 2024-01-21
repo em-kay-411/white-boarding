@@ -59,7 +59,7 @@ function redrawCanvas() {
     for (let i = 0; i < drawings.length; i++) {
         const line = drawings[i];
         if(line.shape === 'freeform'){
-            drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.width), toScreenY(line.height));
+            drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
         }
         else if(line.shape === 'rectangle'){
             drawRectangle(toScreenX(line.x0), toScreenY(line.y0), line.width, line.height);
@@ -104,16 +104,16 @@ function onMouseDown(event) {
         leftMouseDown = false;
     }
 
-    if(shape === 'rectangle'){
-        constantX = event.pageX;
-        constantY = event.pageY;
-    }
-
     // update the cursor coordinates
     cursorX = event.pageX;
     cursorY = event.pageY;
     prevCursorX = event.pageX;
     prevCursorY = event.pageY;
+
+    if(shape === 'rectangle'){
+        constantX = cursorX;
+        constantY = cursorY;
+    }
 }
 function onMouseMove(event) {
     // get mouse position
@@ -136,7 +136,7 @@ function onMouseMove(event) {
         if(shape === 'freeform'){
             // add the line to our drawing history 
             drawings.push({
-                shape: 'line',
+                shape: 'freeform',
                 x0: prevScaledX,
                 y0: prevScaledY,
                 x1: scaledX,
@@ -148,8 +148,7 @@ function onMouseMove(event) {
         else if ( shape === 'rectangle') {
             const width = cursorX - constantX;
             const height = cursorY - constantY;
-            drawRectangle(constantX, constantY, width, height);
-            socket.emit('drawRectangle', ({constantX, constantY, width, height}));
+            drawRectangle(constantX, constantY, width, height);            
         }        
     }
     
@@ -164,10 +163,11 @@ function onMouseUp() {
         drawings.push( {
             shape : 'rectangle',
             x0 : toTrueX(constantX),
-            y0 : toTrueX(constantY),
+            y0 : toTrueY(constantY),
             width : (cursorX - constantX),
             height : (cursorY - constantY)
         })
+        socket.emit('drawRectangle', ({constantX, constantY, width, height}));
     }
 }
 function onMouseWheel(event) {
@@ -309,6 +309,7 @@ function onTouchEnd(event) {
 
 socket.on('drawLine', (data) => {
     drawings.push({
+        shape : 'freeform',
         x0: data.prevCursorX,
         y0: data.prevCursorY,
         x1: data.cursorX,
@@ -318,5 +319,12 @@ socket.on('drawLine', (data) => {
 })
 
 socket.on('drawRectangle', (data) => {
+    drawings.push({
+        shape : 'rectangle',
+        x0: data.constantX,
+        y0: data.constantY,
+        x1: data.width,
+        y1: data.height
+    })
     drawRectangle(data.constantX, data.constantY, data.width, data.height);
 })

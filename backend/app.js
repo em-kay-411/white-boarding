@@ -15,8 +15,12 @@ const io = socketIO(server, {
 io.on('connection', (socket) => {
     console.log(`User connected`);
 
-    socket.on('draw', (data) => {
-        socket.broadcast.emit('draw', (data));
+    socket.on('drawLine', (data) => {
+        socket.broadcast.emit('drawLine', (data));
+    })
+
+    socket.on('drawRectangle', (data) => {
+        socket.broadcast.emit('drawRectangle', (data));
     })
 
     socket.on('disconnect', () => {
