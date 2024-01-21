@@ -58,7 +58,7 @@ function redrawCanvas() {
     context.fillRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < drawings.length; i++) {
         const line = drawings[i];
-        if(line.shape === 'freeform'){
+        if(line.shape === 'freeform'){            
             drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
         }
         else if(line.shape === 'rectangle'){
@@ -76,7 +76,7 @@ window.addEventListener("resize", (event) => {
 // Mouse Event Handlers
 canvas.addEventListener('mousedown', onMouseDown);
 canvas.addEventListener('mouseup', onMouseUp, false);
-canvas.addEventListener('mouseout', onMouseUp, false);
+canvas.addEventListener('mouseout', onMouseOut, false);
 canvas.addEventListener('mousemove', onMouseMove, false);
 canvas.addEventListener('wheel', onMouseWheel, false);
 
@@ -119,10 +119,10 @@ function onMouseMove(event) {
     // get mouse position
     cursorX = event.pageX;
     cursorY = event.pageY;
-    const scaledX = toTrueX(cursorX);
-    const scaledY = toTrueY(cursorY);
-    const prevScaledX = toTrueX(prevCursorX);
-    const prevScaledY = toTrueY(prevCursorY);
+    const trueCursorX = toTrueX(cursorX);
+    const trueCursorY = toTrueY(cursorY);
+    const truePrevCursorX = toTrueX(prevCursorX);
+    const truePrevCursorY = toTrueY(prevCursorY);
 
     if (leftMouseDown && event.shiftKey) {
         // move the screen
@@ -137,19 +137,19 @@ function onMouseMove(event) {
             // add the line to our drawing history 
             drawings.push({
                 shape: 'freeform',
-                x0: prevScaledX,
-                y0: prevScaledY,
-                x1: scaledX,
-                y1: scaledY
+                x0: truePrevCursorX,
+                y0: truePrevCursorY,
+                x1: trueCursorX,
+                y1: trueCursorY
             })
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
-            socket.emit('drawLine', ({prevCursorX, prevCursorY, cursorX, cursorY}));
+            socket.emit('drawLine', ({truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY}));
         }
-        else if ( shape === 'rectangle') {
-            const width = cursorX - constantX;
-            const height = cursorY - constantY;
-            drawRectangle(constantX, constantY, width, height);            
-        }        
+        // else if ( shape === 'rectangle') {
+        //     const width = cursorX - constantX;
+        //     const height = cursorY - constantY;
+        //     drawRectangle(constantX, constantY, width, height);            
+        // }        
     }
     
     prevCursorX = cursorX;
@@ -160,16 +160,27 @@ function onMouseUp() {
     rightMouseDown = false;
 
     if(shape === 'rectangle'){
+        const trueConstantX = toTrueX(constantX);
+        const trueConstantY = toTrueY(constantY);
+        const width = cursorX - constantX;
+        const height = cursorY - constantY;
         drawings.push( {
             shape : 'rectangle',
-            x0 : toTrueX(constantX),
-            y0 : toTrueY(constantY),
-            width : (cursorX - constantX),
-            height : (cursorY - constantY)
+            x0 : trueConstantX,
+            y0 : trueConstantY,
+            width : width,
+            height : height
         })
-        socket.emit('drawRectangle', ({constantX, constantY, width, height}));
+        drawRectangle(constantX, constantY, width, height);    
+        socket.emit('drawRectangle', ({trueConstantX, trueConstantY, width, height}));
     }
 }
+
+function onMouseOut () {
+    leftMouseDown = false;
+    rightMouseDown = false;
+}
+
 function onMouseWheel(event) {
     const deltaY = event.deltaY;
     const deltaX = event.deltaX;
@@ -236,18 +247,18 @@ function onTouchMove(event) {
     const prevTouch0X = prevTouches[0].pageX;
     const prevTouch0Y = prevTouches[0].pageY;
 
-    const scaledX = toTrueX(touch0X);
-    const scaledY = toTrueY(touch0Y);
-    const prevScaledX = toTrueX(prevTouch0X);
-    const prevScaledY = toTrueY(prevTouch0Y);
+    const trueCursorX = toTrueX(touch0X);
+    const trueCursorY = toTrueY(touch0Y);
+    const truePrevCursorX = toTrueX(prevTouch0X);
+    const truePrevCursorY = toTrueY(prevTouch0Y);
 
     if (singleTouch) {
         // add to history
         drawings.push({
-            x0: prevScaledX,
-            y0: prevScaledY,
-            x1: scaledX,
-            y1: scaledY
+            x0: truePrevCursorX,
+            y0: truePrevCursorY,
+            x1: trueCursorX,
+            y1: trueCursorY
         })
         drawLine(prevTouch0X, prevTouch0Y, touch0X, touch0Y);
     }
@@ -310,21 +321,22 @@ function onTouchEnd(event) {
 socket.on('drawLine', (data) => {
     drawings.push({
         shape : 'freeform',
-        x0: data.prevCursorX,
-        y0: data.prevCursorY,
-        x1: data.cursorX,
-        y1: data.cursorY
+        x0: data.truePrevCursorX,
+        y0: data.truePrevCursorY,
+        x1: data.trueCursorX,
+        y1: data.trueCursorY
     })
-    drawLine(data.prevCursorX, data.prevCursorY, data.cursorX, data.cursorY);
+    drawLine(toScreenX(data.truePrevCursorX), toScreenY(data.truePrevCursorY), toScreenX(data.trueCursorX), toScreenY(data.trueCursorY));
 })
 
 socket.on('drawRectangle', (data) => {
     drawings.push({
         shape : 'rectangle',
-        x0: data.constantX,
-        y0: data.constantY,
-        x1: data.width,
-        y1: data.height
+        x0: data.trueConstantX,
+        y0: data.trueConstantY,
+        width: data.width,
+        height: data.height
     })
-    drawRectangle(data.constantX, data.constantY, data.width, data.height);
+    console.log(drawings);
+    drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height);
 })
