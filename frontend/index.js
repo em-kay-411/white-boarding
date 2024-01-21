@@ -1,4 +1,7 @@
 const socket = io('http://localhost:3000');
+const strokeStyle = '#000';
+const lineWidth = 2;
+const shape = 'rectangle';
 
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
@@ -16,6 +19,8 @@ let cursorX;
 let cursorY;
 let prevCursorX;
 let prevCursorY;
+let constantX;
+let constantY;
 
 // distance from origin
 let offsetX = 0;
@@ -53,7 +58,12 @@ function redrawCanvas() {
     context.fillRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < drawings.length; i++) {
         const line = drawings[i];
-        drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
+        if(line.shape === 'freeform'){
+            drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.width), toScreenY(line.height));
+        }
+        else if(line.shape === 'rectangle'){
+            drawRectangle(toScreenX(line.x0), toScreenY(line.y0), line.width, line.height);
+        }        
     }
 }
 redrawCanvas();
@@ -94,6 +104,11 @@ function onMouseDown(event) {
         leftMouseDown = false;
     }
 
+    if(shape === 'rectangle'){
+        constantX = event.pageX;
+        constantY = event.pageY;
+    }
+
     // update the cursor coordinates
     cursorX = event.pageX;
     cursorY = event.pageY;
@@ -116,17 +131,26 @@ function onMouseMove(event) {
         redrawCanvas();
     }
 
-    if (leftMouseDown && !event.shiftKey) {
-        // add the line to our drawing history
-        drawings.push({
-            x0: prevScaledX,
-            y0: prevScaledY,
-            x1: scaledX,
-            y1: scaledY
-        })
-        // draw a line
-        drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
-        socket.emit('draw', ({prevCursorX, prevCursorY, cursorX, cursorY}));
+    if (leftMouseDown && !event.shiftKey) {          
+        
+        if(shape === 'freeform'){
+            // add the line to our drawing history 
+            drawings.push({
+                shape: 'line',
+                x0: prevScaledX,
+                y0: prevScaledY,
+                x1: scaledX,
+                y1: scaledY
+            })
+            drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
+            socket.emit('drawLine', ({prevCursorX, prevCursorY, cursorX, cursorY}));
+        }
+        else if ( shape === 'rectangle') {
+            const width = cursorX - constantX;
+            const height = cursorY - constantY;
+            drawRectangle(constantX, constantY, width, height);
+            socket.emit('drawRectangle', ({constantX, constantY, width, height}));
+        }        
     }
     
     prevCursorX = cursorX;
@@ -135,6 +159,16 @@ function onMouseMove(event) {
 function onMouseUp() {
     leftMouseDown = false;
     rightMouseDown = false;
+
+    if(shape === 'rectangle'){
+        drawings.push( {
+            shape : 'rectangle',
+            x0 : toTrueX(constantX),
+            y0 : toTrueX(constantY),
+            width : (cursorX - constantX),
+            height : (cursorY - constantY)
+        })
+    }
 }
 function onMouseWheel(event) {
     const deltaY = event.deltaY;
@@ -164,9 +198,16 @@ function drawLine(x0, y0, x1, y1) {
     context.beginPath();
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
-    context.strokeStyle = '#000';
-    context.lineWidth = 2;
+    context.strokeStyle = strokeStyle;
+    context.lineWidth = lineWidth;
     context.stroke();
+}
+
+function drawRectangle(x, y, width, height) {
+    context.moveTo(x, y);
+    context.strokeRect(x, y, width, height);
+    context.strokeStyle = strokeStyle;
+    context.lineWidth = lineWidth;
 }
 
 // touch functions
@@ -266,7 +307,7 @@ function onTouchEnd(event) {
     doubleTouch = false;
 }
 
-socket.on('draw', (data) => {
+socket.on('drawLine', (data) => {
     drawings.push({
         x0: data.prevCursorX,
         y0: data.prevCursorY,
@@ -274,4 +315,8 @@ socket.on('draw', (data) => {
         y1: data.cursorY
     })
     drawLine(data.prevCursorX, data.prevCursorY, data.cursorX, data.cursorY);
+})
+
+socket.on('drawRectangle', (data) => {
+    drawRectangle(data.constantX, data.constantY, data.width, data.height);
 })
