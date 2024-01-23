@@ -52,11 +52,14 @@ function onMouseMove(event) {
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
             socket.emit('drawLine', ({truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY}));
         }
-        // else if ( shape === 'rectangle') {
-        //     const width = cursorX - constantX;
-        //     const height = cursorY - constantY;
-        //     drawRectangle(constantX, constantY, width, height);            
-        // }        
+        else if ( shape === 'rectangle') {
+            context.clearRect(constantX, constantY, prevWidth, prevHeight);
+            const width = cursorX - constantX;
+            const height = cursorY - constantY;
+            drawRectangle(constantX, constantY, width, height); 
+            prevWidth = width;
+            prevHeight = height;      
+        }        
     }
     
     prevCursorX = cursorX;
@@ -80,6 +83,9 @@ function onMouseUp() {
         })
         drawRectangle(constantX, constantY, width, height);    
         socket.emit('drawRectangle', ({trueConstantX, trueConstantY, width, height}));
+
+        prevWidth = 0;
+        prevHeight = 0;
     }
 }
 

@@ -11,6 +11,8 @@ let prevCursorX;                // Previous Cursor X
 let prevCursorY;                // Previous Cursor Y
 let constantX;                  // For shapes X
 let constantY;                  // For shapes Y
+let prevWidth = 0;              // Previous width tracking for rectangle drawing
+let prevHeight = 0;             // Previous height tracking for rectangle drawing
 let offsetX = 0;                // Distance from origin X
 let offsetY = 0;                // Dostance from origin Y
 let scale = 1;                  // Zoom amount
