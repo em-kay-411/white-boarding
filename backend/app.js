@@ -23,6 +23,10 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('drawRectangle', (data));
     })
 
+    socket.on('drawCircle', (data) => {
+        socket.broadcast.emit('drawCircle', (data));
+    })
+
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });

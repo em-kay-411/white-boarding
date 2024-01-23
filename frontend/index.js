@@ -1,6 +1,6 @@
 const strokeStyle = '#000';
 const lineWidth = 2;
-const shape = 'rectangle';
+const shape = 'circle';
 const drawings = [];             // History of all the strokes
 const prevTouches = [null, null]; // up to 2 touches
 let singleTouch = false;        // Single Touch Indicatoe
@@ -18,6 +18,7 @@ let offsetY = 0;                // Dostance from origin Y
 let scale = 1;                  // Zoom amount
 let leftMouseDown = false;      // Left Mouse Down Indicator
 let rightMouseDown = false;     // Right Mouse Down Indicator
+let prevRadius = 0;             // Radius to keep track of circle
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 

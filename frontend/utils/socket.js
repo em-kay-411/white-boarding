@@ -20,3 +20,13 @@ socket.on('drawRectangle', (data) => {
     })
     drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height);
 })
+
+socket.on('drawCircle', (data) => {
+    drawings.push({
+        shape : 'circle',
+        x0 : data.trueConstantX,
+        y0 : data.trueConstantY,
+        radius : data.radius
+    })
+    drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius);
+})

@@ -12,6 +12,9 @@ function redrawCanvas() {
         }
         else if(line.shape === 'rectangle'){
             drawRectangle(toScreenX(line.x0), toScreenY(line.y0), line.width, line.height);
-        }        
+        }    
+        else if(line.shape === 'circle'){
+            drawCircle(toScreenX(line.x0), toScreenY(line.y0), line.radius);
+        }    
     }
 }

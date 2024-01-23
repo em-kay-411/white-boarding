@@ -21,6 +21,11 @@ function onMouseDown(event) {
         constantX = cursorX;
         constantY = cursorY;
     }
+
+    if(shape === 'circle'){
+        constantX = cursorX;
+        constantY = cursorY;
+    }
 }
 function onMouseMove(event) {
     // get mouse position
@@ -52,14 +57,19 @@ function onMouseMove(event) {
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
             socket.emit('drawLine', ({truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY}));
         }
-        else if ( shape === 'rectangle') {
-            context.clearRect(constantX, constantY, prevWidth, prevHeight);
+        else if ( shape === 'rectangle' ) {            
             const width = cursorX - constantX;
             const height = cursorY - constantY;
             drawRectangle(constantX, constantY, width, height); 
             prevWidth = width;
             prevHeight = height;      
+            context.clearRect(constantX, constantY, prevWidth, prevHeight);
         }        
+        else if(shape === 'circle') {
+            const radius = Math.sqrt(Math.pow((constantX - cursorX), 2) + Math.pow((constantY - cursorY), 2));
+            drawCircle(constantX, constantY, radius);
+            prevRadius = radius;
+        }
     }
     
     prevCursorX = cursorX;
@@ -72,8 +82,8 @@ function onMouseUp() {
     if(shape === 'rectangle'){
         const trueConstantX = toTrueX(constantX);
         const trueConstantY = toTrueY(constantY);
-        const width = cursorX - constantX;
-        const height = cursorY - constantY;
+        const width = prevWidth;
+        const height = prevHeight;
         drawings.push( {
             shape : 'rectangle',
             x0 : trueConstantX,
@@ -86,6 +96,19 @@ function onMouseUp() {
 
         prevWidth = 0;
         prevHeight = 0;
+    }
+    else if( shape === 'circle' ) {
+        const trueConstantX = toTrueX(constantX);
+        const trueConstantY = toTrueY(constantY);
+        const radius = prevRadius;
+        drawings.push({
+            shape : 'circle',
+            x0 : trueConstantX,
+            y0 : trueConstantY,
+            radius : radius
+        })
+        drawCircle(trueConstantX, trueConstantY, radius);
+        socket.emit('drawCircle', ({trueConstantX, trueConstantY, radius}));
     }
 }
 
