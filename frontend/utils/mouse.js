@@ -27,6 +27,7 @@ function onMouseDown(event) {
         constantY = cursorY;
     }
 }
+
 function onMouseMove(event) {
     // get mouse position
     cursorX = event.pageX;
@@ -75,6 +76,7 @@ function onMouseMove(event) {
     prevCursorX = cursorX;
     prevCursorY = cursorY;
 }
+
 function onMouseUp() {
     leftMouseDown = false;
     rightMouseDown = false;
@@ -107,7 +109,7 @@ function onMouseUp() {
             y0 : trueConstantY,
             radius : radius
         })
-        drawCircle(trueConstantX, trueConstantY, radius);
+        drawCircle(constantX, constantY, radius);
         socket.emit('drawCircle', ({trueConstantX, trueConstantY, radius}));
     }
 }

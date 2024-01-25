@@ -17,5 +17,7 @@ function drawRectangle(x, y, width, height) {
 function drawCircle(x, y, radius){
     context.beginPath();
     context.arc(x, y, radius, 0, 2*Math.PI);
+    context.strokeStyle = strokeStyle;
+    context.lineWidth = lineWidth;
     context.stroke();
 }
