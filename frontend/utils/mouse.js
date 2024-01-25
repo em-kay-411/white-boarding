@@ -53,22 +53,23 @@ function onMouseMove(event) {
                 x0: truePrevCursorX,
                 y0: truePrevCursorY,
                 x1: trueCursorX,
-                y1: trueCursorY
+                y1: trueCursorY,
+                color: strokeStyle
             })
-            drawLine(prevCursorX, prevCursorY, cursorX, cursorY);
-            socket.emit('drawLine', ({truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY}));
+            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle);
+            socket.emit('drawLine', ({truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, strokeStyle}));
         }
         else if ( shape === 'rectangle' ) {            
             const width = cursorX - constantX;
             const height = cursorY - constantY;
-            drawRectangle(constantX, constantY, width, height); 
+            drawRectangle(constantX, constantY, width, height, strokeStyle); 
             prevWidth = width;
             prevHeight = height;      
             context.clearRect(constantX, constantY, prevWidth, prevHeight);
         }        
         else if(shape === 'circle') {
             const radius = Math.sqrt(Math.pow((constantX - cursorX), 2) + Math.pow((constantY - cursorY), 2));
-            drawCircle(constantX, constantY, radius);
+            drawCircle(constantX, constantY, radius, strokeStyle);
             prevRadius = radius;
         }
     }
@@ -91,10 +92,11 @@ function onMouseUp() {
             x0 : trueConstantX,
             y0 : trueConstantY,
             width : width,
-            height : height
+            height : height,
+            color: strokeStyle
         })
-        drawRectangle(constantX, constantY, width, height);    
-        socket.emit('drawRectangle', ({trueConstantX, trueConstantY, width, height}));
+        drawRectangle(constantX, constantY, width, height, strokeStyle);    
+        socket.emit('drawRectangle', ({trueConstantX, trueConstantY, width, height, strokeStyle}));
 
         prevWidth = 0;
         prevHeight = 0;
@@ -107,10 +109,11 @@ function onMouseUp() {
             shape : 'circle',
             x0 : trueConstantX,
             y0 : trueConstantY,
-            radius : radius
+            radius : radius,
+            color: strokeStyle
         })
-        drawCircle(constantX, constantY, radius);
-        socket.emit('drawCircle', ({trueConstantX, trueConstantY, radius}));
+        drawCircle(constantX, constantY, radius, strokeStyle);
+        socket.emit('drawCircle', ({trueConstantX, trueConstantY, radius, strokeStyle}));
     }
 }
 

@@ -5,9 +5,10 @@ socket.on('drawLine', (data) => {
         x0: data.truePrevCursorX,
         y0: data.truePrevCursorY,
         x1: data.trueCursorX,
-        y1: data.trueCursorY
+        y1: data.trueCursorY,
+        color: data.strokeStyle
     })
-    drawLine(toScreenX(data.truePrevCursorX), toScreenY(data.truePrevCursorY), toScreenX(data.trueCursorX), toScreenY(data.trueCursorY));
+    drawLine(toScreenX(data.truePrevCursorX), toScreenY(data.truePrevCursorY), toScreenX(data.trueCursorX), toScreenY(data.trueCursorY), data.strokeStyle);
 })
 
 socket.on('drawRectangle', (data) => {
@@ -16,9 +17,10 @@ socket.on('drawRectangle', (data) => {
         x0: data.trueConstantX,
         y0: data.trueConstantY,
         width: data.width,
-        height: data.height
+        height: data.height,
+        color: data.strokeStyle
     })
-    drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height);
+    drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height, data.strokeStyle);
 })
 
 socket.on('drawCircle', (data) => {
@@ -26,7 +28,8 @@ socket.on('drawCircle', (data) => {
         shape : 'circle',
         x0 : data.trueConstantX,
         y0 : data.trueConstantY,
-        radius : data.radius
+        radius : data.radius,
+        color: data.strokeStyle
     })
-    drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius);
+    drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius, data.strokeStyle);
 })

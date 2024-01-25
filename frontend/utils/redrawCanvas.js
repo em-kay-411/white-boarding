@@ -8,13 +8,13 @@ function redrawCanvas() {
     for (let i = 0; i < drawings.length; i++) {
         const line = drawings[i];
         if(line.shape === 'freeform'){            
-            drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1));
+            drawLine(toScreenX(line.x0), toScreenY(line.y0), toScreenX(line.x1), toScreenY(line.y1), line.color);
         }
         else if(line.shape === 'rectangle'){
-            drawRectangle(toScreenX(line.x0), toScreenY(line.y0), line.width, line.height);
+            drawRectangle(toScreenX(line.x0), toScreenY(line.y0), line.width, line.height, line.color);
         }    
         else if(line.shape === 'circle'){
-            drawCircle(toScreenX(line.x0), toScreenY(line.y0), line.radius);
+            drawCircle(toScreenX(line.x0), toScreenY(line.y0), line.radius, line.color);
         }    
     }
 }
