@@ -5,8 +5,8 @@ function onMouseDown(event) {
         leftMouseDown = true;
         rightMouseDown = false;
     }
-    // detect right clicks
-    if (event.button == 2) {
+
+    if (shape === 'panning') {
         rightMouseDown = true;
         leftMouseDown = false;
     }
@@ -37,14 +37,14 @@ function onMouseMove(event) {
     const truePrevCursorX = toTrueX(prevCursorX);
     const truePrevCursorY = toTrueY(prevCursorY);
 
-    if (leftMouseDown && event.shiftKey) {
+    if (leftMouseDown && event.ctrlKey) {
         // move the screen
         offsetX += (cursorX - prevCursorX) / scale;
         offsetY += (cursorY - prevCursorY) / scale;
         redrawCanvas();
     }
 
-    if (leftMouseDown && !event.shiftKey) {          
+    if (leftMouseDown && !event.ctrlKey) {          
         
         if(shape === 'freeform'){
             // add the line to our drawing history 
@@ -73,6 +73,13 @@ function onMouseMove(event) {
             prevRadius = radius;
         }
     }
+
+    if (rightMouseDown) {
+        // move the screen
+        offsetX += (cursorX - prevCursorX) / scale;
+        offsetY += (cursorY - prevCursorY) / scale;
+        redrawCanvas();
+    }
     
     prevCursorX = cursorX;
     prevCursorY = cursorY;
@@ -95,7 +102,9 @@ function onMouseUp() {
             height : height,
             color: strokeStyle
         })
-        drawRectangle(constantX, constantY, width, height, strokeStyle);    
+        drawRectangle(constantX, constantY, width, height, strokeStyle); 
+        console.log(drawings);   
+        redrawCanvas();
         socket.emit('drawRectangle', ({trueConstantX, trueConstantY, width, height, strokeStyle}));
 
         prevWidth = 0;

@@ -9,9 +9,9 @@ function drawLine(x0, y0, x1, y1, color) {
 
 function drawRectangle(x, y, width, height, color) {
     // context.moveTo(x, y);
-    context.strokeRect(x, y, width, height);
     context.strokeStyle = color;
     context.lineWidth = lineWidth;
+    context.strokeRect(x, y, width, height);
 }
 
 function drawCircle(x, y, radius, color){
