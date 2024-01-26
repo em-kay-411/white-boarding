@@ -58,6 +58,7 @@ function onTouchMove(event) {
 
     if (doubleTouch) {
         // get second touch coordinates
+        event.preventDefault();
         const touch1X = event.touches[1].pageX;
         const touch1Y = event.touches[1].pageY;
         const prevTouch1X = prevTouches[1].pageX;
