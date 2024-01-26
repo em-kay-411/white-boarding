@@ -1,7 +1,7 @@
 const socket = io('http://localhost:3000');
 socket.on('drawLine', (data) => {
     drawings.push({
-        shape : 'freeform',
+        shape: 'freeform',
         x0: data.truePrevCursorX,
         y0: data.truePrevCursorY,
         x1: data.trueCursorX,
@@ -13,7 +13,7 @@ socket.on('drawLine', (data) => {
 
 socket.on('drawRectangle', (data) => {
     drawings.push({
-        shape : 'rectangle',
+        shape: 'rectangle',
         x0: data.trueConstantX,
         y0: data.trueConstantY,
         width: data.width,
@@ -25,11 +25,15 @@ socket.on('drawRectangle', (data) => {
 
 socket.on('drawCircle', (data) => {
     drawings.push({
-        shape : 'circle',
-        x0 : data.trueConstantX,
-        y0 : data.trueConstantY,
-        radius : data.radius,
+        shape: 'circle',
+        x0: data.trueConstantX,
+        y0: data.trueConstantY,
+        radius: data.radius,
         color: data.strokeStyle
     })
     drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius, data.strokeStyle);
+})
+
+socket.on('displayRoomID', (data) => {
+    document.getElementById('roomID').innerHTML = `<div id="roomID">Room ID : ${data}</div>`
 })

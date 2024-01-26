@@ -144,10 +144,19 @@
         bottom: 0px;
         transform: translate(-50%, 0);
     }
+
+    #roomID{
+        bottom: 1%;
+        position: fixed;
+        z-index: 4;
+    }
     
 </style>
 
 <body>
+    <div id="roomID">
+        Room ID : 
+    </div>
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
         <label class="btn btn-outline-secondary" for="btnradio1"><i class="bi bi-pencil-fill"></i></label>
@@ -186,6 +195,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="./utils/convertCoordinates.js"></script>
+    <script src="./utils/generateURL.js"></script>
     <script src="./utils/timer.js"></script>
     <script src="./utils/redrawCanvas.js"></script>
     <script src="./utils/record.js"></script>

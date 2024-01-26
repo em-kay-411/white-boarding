@@ -31,6 +31,16 @@ const stopButton = document.getElementById('stopButton');
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
+let roomID = prompt('Enter the room ID you want to join to!\n Click cancel to create your own room');
+
+if(roomID){
+    socket.emit('joinRoom', roomID);
+}
+else{
+    roomID = generateRandomId(8);
+    socket.emit('createRoom', roomID);
+}
+
 // disable right clicking
 document.oncontextmenu = function () {
     return false;
@@ -61,16 +71,36 @@ freeformButton.onclick = () => {
     shape = 'freeform';
 }
 
+freeformButton.ontouchstart = () => {
+    shape = 'freeform';
+}
+
 squareButton.onclick = () => {
     shape = 'rectangle';
+}
+
+squareButton.ontouchstart = () => {
+    shape = 'rectangle'
 }
 
 circleButton.onclick = () => {
     shape = 'circle';
 }
 
+circleButton.ontouchstart = () => {
+    shape = 'circle';
+}
+
 panButton.onclick = () => {
     shape = 'panning';
+}
+
+panButton.ontouchstart = () => {
+    shape = 'panning';
+}
+
+selectButton.onclick = () => {
+    shape = 'selection';
 }
 
 selectButton.onclick = () => {

@@ -12,6 +12,9 @@ function onTouchStart(event) {
     prevTouches[0] = event.touches[0];
     prevTouches[1] = event.touches[1];
 
+    constantX = event.touches[0].pageX;
+    constantY = event.touches[0].pageY;
+
 }
 function onTouchMove(event) {
     // get first touch coordinates
@@ -26,14 +29,31 @@ function onTouchMove(event) {
     const truePrevCursorY = toTrueY(prevTouch0Y);
 
     if (singleTouch) {
-        // add to history
-        drawings.push({
-            x0: truePrevCursorX,
-            y0: truePrevCursorY,
-            x1: trueCursorX,
-            y1: trueCursorY
-        })
-        drawLine(prevTouch0X, prevTouch0Y, touch0X, touch0Y);
+        if(shape === 'freeform'){
+            drawings.push({
+                shape: 'freeform',
+                x0: truePrevCursorX,
+                y0: truePrevCursorY,
+                x1: trueCursorX,
+                y1: trueCursorY,
+                color: strokeStyle
+            })
+            drawLine(prevTouch0X, prevTouch0Y, touch0X, touch0Y, strokeStyle);
+            socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, strokeStyle }));
+        }
+        else if(shape === 'rectangle'){
+            const width = touch0X - constantX;
+            const height = touch0Y - constantY;
+            drawRectangle(constantX, constantY, width, height, strokeStyle);
+            prevWidth = width;
+            prevHeight = height;
+            context.clearRect(constantX, constantY, prevWidth, prevHeight);
+        }       
+        else if(shape === 'circle'){
+            const radius = Math.sqrt(Math.pow((constantX - touch0X), 2) + Math.pow((constantY - touch0Y), 2));
+            drawCircle(constantX, constantY, radius, strokeStyle);
+            prevRadius = radius;
+        } 
     }
 
     if (doubleTouch) {
@@ -89,4 +109,40 @@ function onTouchMove(event) {
 function onTouchEnd(event) {
     singleTouch = false;
     doubleTouch = false;
+
+    if (shape === 'rectangle') {
+        const trueConstantX = toTrueX(constantX);
+        const trueConstantY = toTrueY(constantY);
+        const width = prevWidth;
+        const height = prevHeight;
+        drawings.push({
+            shape: 'rectangle',
+            x0: trueConstantX,
+            y0: trueConstantY,
+            width: width,
+            height: height,
+            color: strokeStyle
+        })
+        drawRectangle(constantX, constantY, width, height, strokeStyle);
+        redrawCanvas();
+        socket.emit('drawRectangle', ({ trueConstantX, trueConstantY, width, height, strokeStyle }));
+
+        prevWidth = 0;
+        prevHeight = 0;
+    }
+    else if (shape === 'circle') {
+        const trueConstantX = toTrueX(constantX);
+        const trueConstantY = toTrueY(constantY);
+        const radius = prevRadius;
+        drawings.push({
+            shape: 'circle',
+            x0: trueConstantX,
+            y0: trueConstantY,
+            radius: radius,
+            color: strokeStyle
+        })
+        drawCircle(constantX, constantY, radius, strokeStyle);
+        redrawCanvas();
+        socket.emit('drawCircle', ({ trueConstantX, trueConstantY, radius, strokeStyle }));
+    }
 }
