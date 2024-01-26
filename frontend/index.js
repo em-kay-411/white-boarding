@@ -19,11 +19,15 @@ let scale = 1;                  // Zoom amount
 let leftMouseDown = false;      // Left Mouse Down Indicator
 let rightMouseDown = false;     // Right Mouse Down Indicator
 let prevRadius = 0;             // Radius to keep track of circle
+let recording = false;          // Recording status
 const freeformButton = document.getElementById('btnradio1');
 const squareButton = document.getElementById('btnradio2');
 const circleButton = document.getElementById('btnradio3');
 const panButton = document.getElementById('btnradio4');
 const selectButton = document.getElementById('btnradio5');
+const recordZone = document.getElementById('recording');
+const recordButton = document.getElementById('recordButton');
+const stopButton = document.getElementById('stopButton');
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 

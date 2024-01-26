@@ -99,6 +99,52 @@
     #red{
         background-color: red;
     }
+
+    .recording{
+        width: 58px;
+        height: 58px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        bottom: 5%;
+        border-radius: 50%;
+        position: fixed;
+        z-index: 4;
+        display: flex;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        flex-direction: row;
+    }
+
+    .recording :hover{
+        cursor: pointer;
+    }
+
+    .bi-record-fill{
+        position: relative;
+        left: 50%;
+        transform: translate(-50%, 0);
+        font-size: 40px;
+        color: rgb(209, 4, 4);
+    }
+
+    .bi-stop-fill{
+        display: none;
+        position: relative;
+        left: 50%;
+        transform: translate(-50%, 0);
+        font-size: 40px;
+        color: rgb(209, 4, 4);
+    }
+
+    .recording-time{
+        position: fixed;
+        z-index: 4;
+        color: rgb(129, 123, 123);
+        font-size: 20px;
+        left: 50%;
+        bottom: 0px;
+        transform: translate(-50%, 0);
+    }
+    
 </style>
 
 <body>
@@ -128,12 +174,21 @@
         <span class="tile" id="orange" onclick="changeColor('orange')"></span>
         <span class="tile" id="red" onclick="changeColor('red')"></span>
     </div>
+    <div class="recording" id="record" onclick="startOrStopRecording()">
+        <i class="bi bi-record-fill" id="recordButton"></i>
+        <i class="bi bi-stop-fill" id="stopButton"></i>
+    </div>
+    <div class="recording-time" id="timer">
+
+    </div>
     <canvas id="canvas">Your browser does not support canvas</canvas>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
     <script src="./utils/convertCoordinates.js"></script>
+    <script src="./utils/timer.js"></script>
     <script src="./utils/redrawCanvas.js"></script>
+    <script src="./utils/record.js"></script>
     <script src="./utils/shapes.js"></script>
     <script src="./utils/colors.js"></script>
     <script src="./utils/mouse.js"></script>
