@@ -132,10 +132,10 @@ function onMouseOut() {
 }
 
 function onMouseWheel(event) {
-
-    if (event.shiftKey) {
+    event.preventDefault();
+    if (event.ctrlKey) {
         const deltaY = event.deltaY;
-        const scaleAmount = -deltaY / 500;
+        const scaleAmount = -deltaY / 60;
         scale = scale * (1 + scaleAmount);
 
         // zoom the page based on where the cursor is
