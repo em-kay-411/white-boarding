@@ -6,9 +6,10 @@ socket.on('drawLine', (data) => {
         y0: data.truePrevCursorY,
         x1: data.trueCursorX,
         y1: data.trueCursorY,
-        color: data.strokeStyle
+        color: data.strokeStyle,
+        lineWidth: data.lineWidth
     })
-    drawLine(toScreenX(data.truePrevCursorX), toScreenY(data.truePrevCursorY), toScreenX(data.trueCursorX), toScreenY(data.trueCursorY), data.strokeStyle);
+    drawLine(toScreenX(data.truePrevCursorX), toScreenY(data.truePrevCursorY), toScreenX(data.trueCursorX), toScreenY(data.trueCursorY), data.strokeStyle, data.lineWidth);
 })
 
 socket.on('drawRectangle', (data) => {
@@ -18,9 +19,10 @@ socket.on('drawRectangle', (data) => {
         y0: data.trueConstantY,
         width: data.width,
         height: data.height,
-        color: data.strokeStyle
+        color: data.strokeStyle,
+        lineWidth: data.lineWidth
     })
-    drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height, data.strokeStyle);
+    drawRectangle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.width, data.height, data.strokeStyle, data.lineWidth);
 })
 
 socket.on('drawCircle', (data) => {
@@ -29,9 +31,10 @@ socket.on('drawCircle', (data) => {
         x0: data.trueConstantX,
         y0: data.trueConstantY,
         radius: data.radius,
-        color: data.strokeStyle
+        color: data.strokeStyle,
+        lineWidth: data.lineWidth
     })
-    drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius, data.strokeStyle);
+    drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius, data.strokeStyle, data.lineWidth);
 })
 
 socket.on('displayRoomID', (data) => {

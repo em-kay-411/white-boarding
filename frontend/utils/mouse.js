@@ -54,22 +54,39 @@ function onMouseMove(event) {
                 y0: truePrevCursorY,
                 x1: trueCursorX,
                 y1: trueCursorY,
-                color: strokeStyle
+                color: strokeStyle,
+                lineWidth : lineWidth
             })
-            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle);
-            socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, strokeStyle, roomID }));
+            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle, lineWidth);
+            socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, strokeStyle, lineWidth, roomID }));
+        }
+        else if(shape === 'eraser'){
+            const tempStrokeStyle = strokeStyle;
+            strokeStyle = 'white';
+            drawings.push({
+                shape: 'freeform',
+                x0: truePrevCursorX,
+                y0: truePrevCursorY,
+                x1: trueCursorX,
+                y1: trueCursorY,
+                color: strokeStyle,
+                lineWidth : lineWidth
+            })
+            drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle, lineWidth);
+            socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, tempStrokeStyle, lineWidth, roomID }));
+            strokeStyle = tempStrokeStyle;
         }
         else if (shape === 'rectangle') {
             const width = cursorX - constantX;
             const height = cursorY - constantY;
-            drawRectangle(constantX, constantY, width, height, strokeStyle);
+            drawRectangle(constantX, constantY, width, height, strokeStyle, lineWidth);
             prevWidth = width;
             prevHeight = height;
             context.clearRect(constantX, constantY, prevWidth, prevHeight);
         }
         else if (shape === 'circle') {
             const radius = Math.sqrt(Math.pow((constantX - cursorX), 2) + Math.pow((constantY - cursorY), 2));
-            drawCircle(constantX, constantY, radius, strokeStyle);
+            drawCircle(constantX, constantY, radius, strokeStyle, lineWidth);
             prevRadius = radius;
         }
     }
@@ -100,12 +117,12 @@ function onMouseUp() {
             y0: trueConstantY,
             width: width,
             height: height,
-            color: strokeStyle
+            color: strokeStyle,
+            lineWidth : lineWidth
         })
-        drawRectangle(constantX, constantY, width, height, strokeStyle);
-        console.log(drawings);
+        drawRectangle(constantX, constantY, width, height, strokeStyle, lineWidth);
         redrawCanvas();
-        socket.emit('drawRectangle', ({ trueConstantX, trueConstantY, width, height, strokeStyle, roomID }));
+        socket.emit('drawRectangle', ({ trueConstantX, trueConstantY, width, height, strokeStyle, lineWidth, roomID }));
 
         prevWidth = 0;
         prevHeight = 0;
@@ -119,10 +136,12 @@ function onMouseUp() {
             x0: trueConstantX,
             y0: trueConstantY,
             radius: radius,
-            color: strokeStyle
+            color: strokeStyle,
+            lineWidth : lineWidth
         })
-        drawCircle(constantX, constantY, radius, strokeStyle);
-        socket.emit('drawCircle', ({ trueConstantX, trueConstantY, radius, strokeStyle, roomID }));
+        drawCircle(constantX, constantY, radius, strokeStyle, lineWidth);
+        redrawCanvas();
+        socket.emit('drawCircle', ({ trueConstantX, trueConstantY, radius, strokeStyle, lineWidth, roomID }));
     }
 }
 

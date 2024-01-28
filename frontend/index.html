@@ -43,10 +43,10 @@
         color: white;
     }
 
-    .colors{
+    .colors {
         height: 40%;
         top: 50%;
-        background-color: transparent;        
+        background-color: transparent;
         position: fixed;
         z-index: 4;
         display: flex;
@@ -54,7 +54,7 @@
         transform: translate(0%, -50%);
     }
 
-    .colors span{
+    .colors span {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         margin-left: -20px;
@@ -63,44 +63,44 @@
         position: relative;
     }
 
-    .colors :hover{
+    .colors :hover {
         cursor: pointer;
     }
 
-    #black{
+    #black {
         left: 10px;
         background-color: black;
     }
 
-    #violet{
+    #violet {
         background-color: violet;
     }
 
-    #indigo{
+    #indigo {
         background-color: indigo;
     }
 
-    #blue{
+    #blue {
         background-color: blue;
     }
 
-    #green{
+    #green {
         background-color: green;
     }
 
-    #yellow{
+    #yellow {
         background-color: yellow;
     }
 
-    #orange{
+    #orange {
         background-color: orange;
     }
 
-    #red{
+    #red {
         background-color: red;
     }
 
-    .recording{
+    .recording {
         width: 58px;
         height: 58px;
         left: 50%;
@@ -114,11 +114,11 @@
         flex-direction: row;
     }
 
-    .recording :hover{
+    .recording :hover {
         cursor: pointer;
     }
 
-    .bi-record-fill{
+    .bi-record-fill {
         position: relative;
         left: 50%;
         transform: translate(-50%, 0);
@@ -126,7 +126,7 @@
         color: rgb(209, 4, 4);
     }
 
-    .bi-stop-fill{
+    .bi-stop-fill {
         display: none;
         position: relative;
         left: 50%;
@@ -135,7 +135,7 @@
         color: rgb(209, 4, 4);
     }
 
-    .recording-time{
+    .recording-time {
         position: fixed;
         z-index: 4;
         color: rgb(129, 123, 123);
@@ -145,17 +145,62 @@
         transform: translate(-50%, 0);
     }
 
-    #roomID{
+    #roomID {
         bottom: 1%;
         position: fixed;
         z-index: 4;
     }
+
+    .slidecontainer {
+        top: 50px;
+        width: 200px;
+        position: fixed;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+
+    /* The slider itself */
+    .slider {
+        border-radius: 20%;
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 5px;
+        background: #aebef4;
+        outline: none;
+        opacity: 0.7;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+    }
+
     
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #000302;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        background: #000302;
+        cursor: pointer;
+    }
 </style>
 
 <body>
     <div id="roomID">
-        Room ID : 
+        Room ID :
     </div>
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
@@ -171,7 +216,10 @@
         <label class="btn btn-outline-secondary" for="btnradio4"><i class="bi bi-hand-index-thumb-fill"></i></label>
 
         <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-        <label class="btn btn-outline-secondary" for="btnradio5"><i class="bi bi-cursor-fill"></i></label>
+        <label class="btn btn-outline-secondary" for="btnradio5"><i class="bi bi-eraser-fill"></i></label>
+    </div>
+    <div class="slidecontainer">
+        <input type="range" min="1" max="20" value="2" class="slider" id="myRange">
     </div>
     <div class="colors">
         <span class="tile" id="black" onclick="changeColor('black')"></span>

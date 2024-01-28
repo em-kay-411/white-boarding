@@ -24,12 +24,15 @@ const freeformButton = document.getElementById('btnradio1');
 const squareButton = document.getElementById('btnradio2');
 const circleButton = document.getElementById('btnradio3');
 const panButton = document.getElementById('btnradio4');
-const selectButton = document.getElementById('btnradio5');
+const eraserButton = document.getElementById('btnradio5');
 const recordZone = document.getElementById('recording');
 const recordButton = document.getElementById('recordButton');
 const stopButton = document.getElementById('stopButton');
+const slider = document.getElementById('myRange');
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
+context.lineCap = "round";
+context.lineJoin = "round";
 
 let roomID = prompt('Enter the room ID you want to join to!\n Click cancel to create your own room');
 
@@ -67,6 +70,10 @@ canvas.addEventListener('touchend', onTouchEnd);
 canvas.addEventListener('touchcancel', onTouchEnd);
 canvas.addEventListener('touchmove', onTouchMove);
 
+slider.oninput = () => {
+    lineWidth = slider.value;
+}
+
 freeformButton.onclick = () => {
     shape = 'freeform';
 }
@@ -99,10 +106,10 @@ panButton.ontouchstart = () => {
     shape = 'panning';
 }
 
-selectButton.onclick = () => {
-    shape = 'selection';
+eraserButton.onclick = () => {
+    shape = 'eraser';
 }
 
-selectButton.onclick = () => {
-    shape = 'selection';
+eraserButton.onclick = () => {
+    shape = 'eraser';
 }
