@@ -1,7 +1,7 @@
 let strokeStyle = 'black';
 let lineWidth = 2;
 let shape = 'freeform';
-const drawings = [];             // History of all the strokes
+let drawings = [];             // History of all the strokes
 const prevTouches = [null, null]; // up to 2 touches
 let singleTouch = false;        // Single Touch Indicatoe
 let doubleTouch = false;        // Double touch indiacator
@@ -41,6 +41,7 @@ else{
     roomID = generateRandomId(8);
     socket.emit('createRoom', roomID);
 }
+socket.emit('getHistory', roomID);
 
 // disable right clicking
 document.oncontextmenu = function () {

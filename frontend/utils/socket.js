@@ -40,3 +40,12 @@ socket.on('drawCircle', (data) => {
 socket.on('displayRoomID', (data) => {
     document.getElementById('roomID').innerHTML = `<div id="roomID">Room ID : ${data}</div>`
 })
+
+socket.on('sendHistory', (socketID) => {
+    socket.emit('receiveHistory', {socketID, drawings});
+})
+
+socket.on('receiveHistory', (data) => {
+    drawings = data.drawings;
+    redrawCanvas();
+})
