@@ -1,5 +1,27 @@
 function onMouseDown(event) {
 
+    if (writing) {
+        const trueConstantX = toTrueX(constantX);
+        const trueConstantY = toTrueY(constantY);
+        const text = textBox.value;
+        drawings.push({
+            shape: 'text',
+            x0: trueConstantX,
+            y0: trueConstantY,
+            text: text,
+            color: strokeStyle,
+            lineWidth: lineWidth
+        })
+        cleanText(constantX, constantY, prevText, strokeStyle, lineWidth);
+        drawText(constantX, constantY, textBox.value, strokeStyle, lineWidth);
+        redrawCanvas();
+        socket.emit('drawText', ({ trueConstantX, trueConstantY, text, strokeStyle, lineWidth, roomID }));
+        writing = false;
+        textBox.value = '';
+        textBox.style.display = 'none';
+        return;
+    }
+
     // detect left clicks
     if (event.button == 0) {
         leftMouseDown = true;
@@ -16,6 +38,17 @@ function onMouseDown(event) {
     cursorY = event.pageY;
     prevCursorX = event.pageX;
     prevCursorY = event.pageY;
+
+    if (shape === 'text' || event.button == 2) {
+        textBox.style.display = 'block';
+        textBox.style.top = `${cursorY}px`;
+        textBox.style.left = `${cursorX}px`;
+        textBox.style.transform = 'translate(-50%, -50%)';
+        textBox.focus();
+        constantX = cursorX;
+        constantY = cursorY;
+        writing = true;
+    }
 
     if (shape === 'rectangle') {
         constantX = cursorX;
@@ -55,12 +88,12 @@ function onMouseMove(event) {
                 x1: trueCursorX,
                 y1: trueCursorY,
                 color: strokeStyle,
-                lineWidth : lineWidth
+                lineWidth: lineWidth
             })
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle, lineWidth);
             socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, strokeStyle, lineWidth, roomID }));
         }
-        else if(shape === 'eraser'){
+        else if (shape === 'eraser') {
             const tempStrokeStyle = strokeStyle;
             strokeStyle = 'white';
             drawings.push({
@@ -70,7 +103,7 @@ function onMouseMove(event) {
                 x1: trueCursorX,
                 y1: trueCursorY,
                 color: strokeStyle,
-                lineWidth : lineWidth
+                lineWidth: lineWidth
             })
             drawLine(prevCursorX, prevCursorY, cursorX, cursorY, strokeStyle, lineWidth);
             socket.emit('drawLine', ({ truePrevCursorX, truePrevCursorY, trueCursorX, trueCursorY, tempStrokeStyle, lineWidth, roomID }));
@@ -118,7 +151,7 @@ function onMouseUp() {
             width: width,
             height: height,
             color: strokeStyle,
-            lineWidth : lineWidth
+            lineWidth: lineWidth
         })
         drawRectangle(constantX, constantY, width, height, strokeStyle, lineWidth);
         redrawCanvas();
@@ -137,7 +170,7 @@ function onMouseUp() {
             y0: trueConstantY,
             radius: radius,
             color: strokeStyle,
-            lineWidth : lineWidth
+            lineWidth: lineWidth
         })
         drawCircle(constantX, constantY, radius, strokeStyle, lineWidth);
         redrawCanvas();

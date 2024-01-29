@@ -15,6 +15,9 @@ function redrawCanvas() {
         }    
         else if(line.shape === 'circle'){
             drawCircle(toScreenX(line.x0), toScreenY(line.y0), line.radius, line.color, line.lineWidth);
-        }    
+        } 
+        else if(line.shape === 'text'){
+            drawText(toScreenX(line.x0), toScreenY(line.y0), line.text, line.color, line.lineWidth);
+        }   
     }
 }

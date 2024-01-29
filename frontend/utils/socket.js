@@ -37,6 +37,18 @@ socket.on('drawCircle', (data) => {
     drawCircle(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.radius, data.strokeStyle, data.lineWidth);
 })
 
+socket.on('drawText', (data) => {
+    drawings.push({
+        shape : 'text',
+        x0 : data.trueConstantX,
+        y0 : data.trueConstantY,
+        text : data.text,
+        color: data.strokeStyle,
+        lineWidth: data.lineWidth
+    })
+    drawText(toScreenX(data.trueConstantX), toScreenY(data.trueConstantY), data.text, data.strokeStyle, data.lineWidth);
+})
+
 socket.on('displayRoomID', (data) => {
     document.getElementById('roomID').innerHTML = `<div id="roomID">Room ID : ${data}</div>`
 })

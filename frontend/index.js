@@ -1,6 +1,8 @@
 let strokeStyle = 'black';
 let lineWidth = 2;
+let prevText = '';
 let shape = 'freeform';
+let writing = false;
 let drawings = [];             // History of all the strokes
 const prevTouches = [null, null]; // up to 2 touches
 let singleTouch = false;        // Single Touch Indicatoe
@@ -25,10 +27,12 @@ const squareButton = document.getElementById('btnradio2');
 const circleButton = document.getElementById('btnradio3');
 const panButton = document.getElementById('btnradio4');
 const eraserButton = document.getElementById('btnradio5');
+const typeButton = document.getElementById('btnradio6');
 const recordZone = document.getElementById('recording');
 const recordButton = document.getElementById('recordButton');
 const stopButton = document.getElementById('stopButton');
 const slider = document.getElementById('myRange');
+const textBox = document.getElementById('textBox');
 const canvas = document.getElementById("canvas");
 const context = canvas.getContext("2d");
 
@@ -109,6 +113,16 @@ eraserButton.onclick = () => {
     shape = 'eraser';
 }
 
-eraserButton.onclick = () => {
+eraserButton.onTouchStart = () => {
     shape = 'eraser';
+}
+
+typeButton.onclick = () => {
+    shape = 'text';
+}
+
+textBox.oninput = () => {
+    cleanText(cursorX, cursorY, prevText, lineWidth);
+    drawText(cursorX, cursorY, textBox.value, strokeStyle, lineWidth);
+    prevText = textBox.value;
 }

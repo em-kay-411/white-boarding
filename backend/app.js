@@ -60,6 +60,10 @@ io.on('connection', (socket) => {
         socket.to(data.roomID).emit('drawCircle', (data));
     })
 
+    socket.on('drawText', (data) => {
+        socket.to(data.roomID).emit('drawText', (data));
+    })
+
     socket.on('disconnect', () => {
         for (const room in rooms) {
             if(rooms[room].creator === socket.id){

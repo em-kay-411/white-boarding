@@ -196,6 +196,12 @@
         background: #000302;
         cursor: pointer;
     }
+
+    #textBox{
+        display: none;
+        position: fixed;
+        z-index: 4;
+    }
 </style>
 
 <body>
@@ -217,6 +223,9 @@
 
         <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
         <label class="btn btn-outline-secondary" for="btnradio5"><i class="bi bi-eraser-fill"></i></label>
+
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio6" autocomplete="off">
+        <label class="btn btn-outline-secondary" for="btnradio6"><i class="bi bi-type"></i></i></label>
     </div>
     <div class="slidecontainer">
         <input type="range" min="1" max="20" value="2" class="slider" id="myRange">
@@ -231,6 +240,7 @@
         <span class="tile" id="orange" onclick="changeColor('orange')"></span>
         <span class="tile" id="red" onclick="changeColor('red')"></span>
     </div>
+    <input type="text" id="textBox"></input>
     <div class="recording" id="record" onclick="startOrStopRecording()">
         <i class="bi bi-record-fill" id="recordButton"></i>
         <i class="bi bi-stop-fill" id="stopButton"></i>
