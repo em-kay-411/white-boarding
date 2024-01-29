@@ -49,3 +49,7 @@ socket.on('receiveHistory', (data) => {
     drawings = data.drawings;
     redrawCanvas();
 })
+
+socket.on('stopRecording', () => {
+    stopRecording();
+})

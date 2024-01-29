@@ -72,6 +72,7 @@ io.on('connection', (socket) => {
                 }
             }
         }
+        socket.to(socket.id).emit('saveRecording');
         console.log('User disconnected');
     });
 });
