@@ -23,7 +23,7 @@ function drawCircle(x, y, radius, color, lineWidth){
 }
 
 function drawText(x, y, text, color, lineWidth){
-    context.font = `${lineWidth*20}px Arial`;
+    context.font = `${lineWidth*10}px Arial`;
     context.fillStyle = color;
     context.textAlign = "center";
     context.fillText(text, x, y);

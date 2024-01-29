@@ -13,6 +13,8 @@ let prevCursorX;                // Previous Cursor X
 let prevCursorY;                // Previous Cursor Y
 let constantX;                  // For shapes X
 let constantY;                  // For shapes Y
+let prevConstantX;
+let prevConstantY;
 let prevWidth = 0;              // Previous width tracking for rectangle drawing
 let prevHeight = 0;             // Previous height tracking for rectangle drawing
 let offsetX = 0;                // Distance from origin X
@@ -78,42 +80,52 @@ slider.oninput = () => {
 }
 
 freeformButton.onclick = () => {
+    textBox.style.display = 'none';
     shape = 'freeform';
 }
 
 freeformButton.ontouchstart = () => {
+    textBox.style.display = 'none';
     shape = 'freeform';
 }
 
 squareButton.onclick = () => {
+    textBox.style.display = 'none';
     shape = 'rectangle';
 }
 
 squareButton.ontouchstart = () => {
+    textBox.style.display = 'none';
     shape = 'rectangle'
 }
 
 circleButton.onclick = () => {
+    textBox.style.display = 'none';
     shape = 'circle';
 }
 
 circleButton.ontouchstart = () => {
+    textBox.style.display = 'none';
     shape = 'circle';
 }
 
 panButton.onclick = () => {
+    textBox.style.display = 'none';
     shape = 'panning';
 }
 
 panButton.ontouchstart = () => {
+    textBox.style.display = 'none';
     shape = 'panning';
 }
 
 eraserButton.onclick = () => {
+    textBox.style.display = 'none';
     shape = 'eraser';
 }
 
 eraserButton.onTouchStart = () => {
+    textBox.style.display = 'none';
     shape = 'eraser';
 }
 
@@ -121,8 +133,12 @@ typeButton.onclick = () => {
     shape = 'text';
 }
 
+typeButton.ontouchstart = () => {
+    shape = 'text';
+}
+
 textBox.oninput = () => {
-    cleanText(cursorX, cursorY, prevText, lineWidth);
-    drawText(cursorX, cursorY, textBox.value, strokeStyle, lineWidth);
+    cleanText(constantX, constantY, prevText, lineWidth);
+    drawText(constantX, constantY, textBox.value, strokeStyle, lineWidth);
     prevText = textBox.value;
 }
